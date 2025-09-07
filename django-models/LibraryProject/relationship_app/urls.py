@@ -12,7 +12,7 @@ urlpatterns = [
     path("admin-view/", views.admin_view, name="admin_view"), # Admin only view
     path("librarian-view/", views.librarian_view, name="librarian_view"), # Librarian only view
     path("member-view/", views.member_view, name="member_view"), # Member only view
-    path("add-book/", views.add_book, name="add_book"), # Add book view
-    path("edit-book/<int:book_id>/", views.edit_book, name="edit_book"), # Edit book view
-    path("delete-book/<int:book_id>/", views.delete_book, name="delete_book"), # Delete book view
+    path("add_book/", views.add_book, name="add_book"), # Add book view
+    path("edit_book/<int:book_id>/", views.edit_book, name="edit_book"), # Edit book view
+    path("delete_book/<int:book_id>/", views.delete_book, name="delete_book"), # Delete book view
 ]
