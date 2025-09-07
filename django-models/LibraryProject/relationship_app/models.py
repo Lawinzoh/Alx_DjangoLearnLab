@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Create your models here.
+#Implementing Advanced Model Relationships
+
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
@@ -30,6 +32,8 @@ class Librarian(models.Model):
     def __str__(self):
         return self.name
     
+#Implement Role-Based Access Control in Django
+
 class UserProfile(models.Model):
     ROLE_CHOICES = [
         ('Admin', 'Admin'),
@@ -37,7 +41,7 @@ class UserProfile(models.Model):
         ('Member', 'Member'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
