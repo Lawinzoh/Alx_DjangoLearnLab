@@ -9,7 +9,10 @@ urlpatterns = [
     path("register/", views.register, name="register"), # User registration
     path("login/", LoginView.as_view(template_name="registration/login.html"), name="login"), # User login
     path("logout/", LogoutView.as_view(template_name="registration/logout.html"), name="logout"), # User logout
-    path("admin-view/", views.admin_view, name="admin_view"),
-    path("librarian-view/", views.librarian_view, name="librarian_view"),
-    path("member-view/", views.member_view, name="member_view"),
+    path("admin-view/", views.admin_view, name="admin_view"), # Admin only view
+    path("librarian-view/", views.librarian_view, name="librarian_view"), # Librarian only view
+    path("member-view/", views.member_view, name="member_view"), # Member only view
+    path("add-book/", views.add_book, name="add_book"), # Add book view
+    path("edit-book/<int:book_id>/", views.edit_book, name="edit_book"), # Edit book view
+    path("delete-book/<int:book_id>/", views.delete_book, name="delete_book"), # Delete book view
 ]
