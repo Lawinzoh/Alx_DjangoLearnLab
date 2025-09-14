@@ -14,7 +14,7 @@ class BookAdmin(admin.ModelAdmin):
 # Register the model with the custom admin
 admin.site.register(Book, BookAdmin)
 
-class ModelAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ("username", "email", "date_of_birth", "is_staff", "is_superuser")
     fieldsets = UserAdmin.fieldsets + (
@@ -32,5 +32,5 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 # Register both the custom user and the user profile
-admin.site.register(CustomUser, ModelAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
