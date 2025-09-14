@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u)1_pdn_7s#y14o3rtn4(p6*lqq0rsc4f207nce5utw^zsu5wn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf',
     'relationship_app',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -125,3 +127,51 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# Force HTTPS and secure cookies
+SECURE_SSL_REDIRECT = True              # Redirect HTTP to HTTPS
+CSRF_COOKIE_SECURE = True               # CSRF cookie only over HTTPS
+SESSION_COOKIE_SECURE = True            # Session cookie only over HTTPS
+CSRF_COOKIE_HTTPONLY = True             # Prevent JavaScript access to CSRF cookie
+SESSION_COOKIE_HTTPONLY = True          # Prevent JavaScript access to session cookie
+
+# Browser security headers
+SECURE_BROWSER_XSS_FILTER = True        # XSS protection in browsers
+SECURE_CONTENT_TYPE_NOSNIFF = True      # Prevent MIME-type sniffing
+X_FRAME_OPTIONS = 'DENY'                # Clickjacking protection
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 3600              # Adjust time as needed
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Allowed Hosts (replace with your domain in production)
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+# ------------------------------
+# Content Security Policy (CSP)
+# ------------------------------
+
+# Only allow resources from your own domain by default
+CSP_DEFAULT_SRC = ("'self'",)
+
+# JavaScript sources
+CSP_SCRIPT_SRC = ("'self'",)
+
+# CSS sources
+CSP_STYLE_SRC = ("'self'",)
+
+# Images (allow inline data URIs if needed)
+CSP_IMG_SRC = ("'self'", "data:")
+
+# Fonts
+CSP_FONT_SRC = ("'self'",)
+
+# AJAX/WebSocket endpoints
+CSP_CONNECT_SRC = ("'self'",)
+
+# Prevent framing
+CSP_FRAME_SRC = ("'none'",)
+
+# Prevent plugins
+CSP_OBJECT_SRC = ("'none'",)

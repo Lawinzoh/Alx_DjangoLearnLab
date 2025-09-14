@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Book List</h1>
+    <a href="{% url 'create_book' %}">Add New Book</a>
+    <ul>
+        {% for book in books %}
+        <li>
+            {{ book.title }} by {{ book.author }} ({{ book.publication_year }})
+            <a href="{% url 'edit_book' book.pk %}">Edit</a>
+            <form method="post" action="{% url 'delete_book' book.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% empty %}
+        <li>No books available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
