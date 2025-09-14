@@ -1,12 +1,13 @@
 from django import forms
 from .models import Book
 
+# ------------------------------
+# ModelForm for Book
+# ------------------------------
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        # Include the fields you want users to fill
         fields = ['title', 'author', 'publication_year']
-        # Optional: Add widgets or labels if needed
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter book title'}),
             'author': forms.TextInput(attrs={'placeholder': 'Enter author name'}),
@@ -17,3 +18,18 @@ class BookForm(forms.ModelForm):
             'author': 'Author',
             'publication_year': 'Year Published',
         }
+
+# ------------------------------
+# Example Form (Generic)
+# ------------------------------
+class ExampleForm(forms.Form):
+    name = forms.CharField(
+        max_length=100, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your name'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your email'})
+    )
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter your message'})
+    )
