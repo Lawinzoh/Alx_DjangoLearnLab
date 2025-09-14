@@ -171,6 +171,12 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 # ------------------------------
+# Trust proxy headers (for reverse proxies like Nginx)
+# ------------------------------
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# ------------------------------
 # Secure Cookies
 # ------------------------------
 
