@@ -16,15 +16,21 @@ admin.site.register(Book, BookAdmin)
 
 class ModelAdmin(UserAdmin):
     model = CustomUser
-    list_display = ("username", "email", "date_of_birth", "is_staff", "is_superuser") # Fields displayed in the list view
+    list_display = ("username", "email", "date_of_birth", "is_staff", "is_superuser")
     fieldsets = UserAdmin.fieldsets + (
-        (None, {"fields": ("date_of_birth", "profile_photo")}), 
-    )                                                              # Fields available when editing/creating a user
-    # Fields available when creating a new user
+        (None, {"fields": ("date_of_birth", "profile_photo")}),
+    )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {"fields": ("date_of_birth", "profile_photo")}),
     )
 
-# Register both the custom user and the UserProfile
+
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ("user", "role")
+    list_filter = ("role",)  # optional: makes filtering by role easier
+    search_fields = ("user__username", "user__email")  # search by username/email
+
+
+# Register both the custom user and the user profile
 admin.site.register(CustomUser, ModelAdmin)
-admin.site.register(UserProfile)
+admin.site.register(UserProfile, UserProfileAdmin)
