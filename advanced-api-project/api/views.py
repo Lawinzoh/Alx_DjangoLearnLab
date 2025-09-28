@@ -14,6 +14,7 @@ from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import BookFilter
+from django_filters import rest_framework
 
 # 1. ListView: Retrieves all books (R - Read All)
 class ListView(ListView):
