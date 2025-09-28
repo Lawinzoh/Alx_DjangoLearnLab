@@ -103,7 +103,7 @@ class PrivateBookApiTests(APITestCase):
         # Setup for Authentication
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username=self.username, password=self.password)
         
         # Setup test data
         self.author1 = Author.objects.create(name='Author A')
