@@ -10,7 +10,7 @@ from .models import Book
 from django.urls import reverse_lazy
 from rest_framework import generics
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly    
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated  
 
 # 1. ListView: Retrieves all books (R - Read All)
 class ListView(ListView):
