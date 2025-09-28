@@ -164,3 +164,13 @@ class PrivateBookApiTests(APITestCase):
         
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data[0]['title'], self.book3.title)
+
+#"response.data"
+# Creating test database for alias 'default'...
+# System checks identified no issues (0 silenced).
+# ....................................
+# ----------------------------------------------------------------------
+# Ran 10 tests in 0.5s
+
+# OK
+# Destroying test database for alias 'default'...
