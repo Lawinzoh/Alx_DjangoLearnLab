@@ -1,5 +1,5 @@
 from time import timezone
-from api_project.api import serializers
+from rest_framework import serializers
 from .models import Book, Author
 
 

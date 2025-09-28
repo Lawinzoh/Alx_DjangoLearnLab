@@ -62,3 +62,42 @@ Permissions are confirmed by the following behavior:
 
 * **Anonymous Users:** Can successfully perform **GET** requests to list or view details. Any attempt to use $\text{POST}$, $\text{PUT}$, $\text{PATCH}$, or $\text{DELETE}$ will result in a **403 Forbidden** response.
 * **Authenticated Users:** Have full $\text{CRUD}$ access across all endpoints.
+
+
+
+
+This section provides clear, actionable instructions for API consumers on how to utilize the new features in their requests.
+
+🔍 Advanced Query Capabilities on /api/books/
+The list endpoint (GET /api/books/) now supports advanced querying by integrating three distinct filter backends:
+
+1. Filtering (Structured Queries)
+Allows filtering by exact field matches, range lookups, and partial matches on specific fields.
+
+Feature	Query Parameter	Example Request
+Year Range	publication_year_gte	?publication_year_gte=2000
+Exact Author	author (Author ID)	?author=5
+Title Contains	title__icontains	?title__icontains=ocean
+
+Export to Sheets
+2. Searching (Text-Based Queries)
+Allows a single search term to be checked against both the book's title and the author's name.
+
+Parameter	Search Fields	Example Request
+search	^title, author__name	?search=Mystery Writer
+
+Export to Sheets
+3. Ordering (Sorting Results)
+Allows sorting the final result set by any of the fields below. Use a minus sign (-) for descending order.
+
+Field	Example Request (Descending)
+publication_year	?ordering=-publication_year (Newest first)
+author__name	?ordering=author__name (Alphabetical by author)
+title	?ordering=-title (Reverse alphabetical by title)
+
+Export to Sheets
+Combined Query Example
+All features can be combined in a single request for highly specific results:
+
+# Scenario: Find books published in 2015 or later, where the author's name contains 'King', sorted by year descending.
+/api/books/?publication_year_gte=2015&search=King&ordering=-publication_year

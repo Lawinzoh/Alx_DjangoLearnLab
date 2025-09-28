@@ -1,4 +1,5 @@
 # library/views.py (or wherever your views file is)
+from warnings import filters
 from django.views.generic import (
     ListView,
     DetailView,
@@ -8,9 +9,11 @@ from django.views.generic import (
 )
 from .models import Book
 from django.urls import reverse_lazy
-from rest_framework import generics
+from rest_framework import generics, filters
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated  
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import BookFilter
 
 # 1. ListView: Retrieves all books (R - Read All)
 class ListView(ListView):
@@ -55,6 +58,25 @@ class BookListCreateAPIView(generics.ListCreateAPIView):
     # - GET (List) is allowed for everyone.
     # - POST (Create) is restricted to authenticated users.
     permission_classes = [IsAuthenticatedOrReadOnly] 
+
+    # 🔑 Custom Filter & Search, and Ordering Setup:
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        ]
+    search_fields = ['^title', 'author__name']
+    filterset_class = BookFilter # Reference the custom filter class
+    ordering_fields = ['title', 'publication_year', 'author__name']
+    ordering = ['title'] # Default ordering
+
+
+    def perform_create(self, serializer):
+        """
+        Executes custom logic before saving a new Book instance.
+        """
+        print(f"LOG: Creating new book: {serializer.validated_data.get('title')}")
+        serializer.save()
 
 # --- R (Detail), U (Update), and D (Delete) View ---
 class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
