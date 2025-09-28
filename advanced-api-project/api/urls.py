@@ -15,7 +15,7 @@ urlpatterns = [
     
     # 2. Add New Book (CreateView) - C (Create)
     # Endpoint: /books/new/
-    path('books/new/', CreateView.as_view(), name='book_create'),
+    path('books/create/', CreateView.as_view(), name='book_create'),
 
     # 3. Retrieve Single Book (DetailView) - R (Read One)
     # Endpoint: /books/<id>/
@@ -24,9 +24,9 @@ urlpatterns = [
 
     # 4. Modify Existing Book (UpdateView) - U (Update)
     # Endpoint: /books/<id>/edit/
-    path('books/<int:pk>/edit/', UpdateView.as_view(), name='book_update'),
+    path('books/update/', UpdateView.as_view(), name='book_update'),
 
     # 5. Remove a Book (DeleteView) - D (Delete)
     # Endpoint: /books/<id>/delete/
-    path('books/<int:pk>/delete/', DeleteView.as_view(), name='book_delete'),
+    path('books/delete/', DeleteView.as_view(), name='book_delete'),
 ]
