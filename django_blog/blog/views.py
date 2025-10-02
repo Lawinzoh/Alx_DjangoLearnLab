@@ -15,11 +15,11 @@ def register(request):
             if profile_picture:
                 user.profile.profile_picture = profile_picture
                 user.profile.save()
-            login(request, user)  # Log the user in after registration
+            login(request, user)  # Log the user in after blog
             return redirect('profile')  # Redirect to a profile page
     else:
         form = SignUpForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'blog/register.html', {'form': form})
 
 @login_required # Ensure the user is logged in to view their profile
 def profile(request):
@@ -34,7 +34,7 @@ def profile(request):
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'registration/profile.html', {'u_form': u_form, 'p_form': p_form})
+    return render(request, 'blog/profile.html', {'u_form': u_form, 'p_form': p_form})
 
 def home(request):
     return render(request, 'blog/home.html')
