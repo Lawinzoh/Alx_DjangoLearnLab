@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e6712zynn_v!=f9(a3c)bl75qy2x%=+wo@zd(op4upg447rti5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -122,6 +122,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 # 👇 add these so Django knows about your project-level static dir
+STATICFILES_DIRS = [BASE_DIR / "blog" / "static"]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # directory where static files will be collected
 
@@ -130,3 +131,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # directory where static files will be c
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# auth redirects
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
