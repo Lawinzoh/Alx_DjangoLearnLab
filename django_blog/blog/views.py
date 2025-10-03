@@ -71,7 +71,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user  # set the post author automatically
         return super().form_valid(form)
     def get_success_url(self):
-        return reverse('posts')
+        return reverse('post-list')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'Create'
@@ -90,7 +90,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         return self.request.user == post.author  # only allow the author to edit
     def get_success_url(self):
-        return reverse('posts')
+        return reverse('post-list')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'Update'
@@ -101,47 +101,8 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
     # Redirect to the blog list after successful deletion
-    success_url = reverse_lazy('posts')
+    success_url = reverse_lazy('post-list')
 
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author  # only allow the author to delete
-
-# # --- R (List) and C (Create) View ---
-# class BookListCreateAPIView(generics.ListCreateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = BookSerializer
-    
-#     # 🔑 Permission Setup: 
-#     # - GET (List) is allowed for everyone.
-#     # - POST (Create) is restricted to authenticated users.
-#     permission_classes = [IsAuthenticatedOrReadOnly] 
-
-#     # 🔑 Custom Filter & Search, and Ordering Setup:
-#     filter_backends = [
-#         DjangoFilterBackend,
-#         filters.SearchFilter,
-#         filters.OrderingFilter,
-#         ]
-#     search_fields = ['^title', 'author__name']
-#     filterset_class = BookFilter # Reference the custom filter class
-#     ordering_fields = ['title', 'publication_year', 'author__name']
-#     ordering = ['title'] # Default ordering
-
-
-#     def perform_create(self, serializer):
-#         """
-#         Executes custom logic before saving a new Book instance.
-#         """
-#         print(f"LOG: Creating new book: {serializer.validated_data.get('title')}")
-#         serializer.save()
-
-# # --- R (Detail), U (Update), and D (Delete) View ---
-# class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = BookSerializer
-    
-#     # 🔑 Permission Setup: 
-#     # - GET (Detail) is allowed for everyone.
-#     # - PUT/PATCH (Update) and DELETE are restricted to authenticated users.
-#     permission_classes = [IsAuthenticatedOrReadOnly]
