@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileUpdateForm, SignUpForm, UserUpdateForm
-from .models import Profile
+from .forms import PostForm, ProfileUpdateForm, SignUpForm, UserUpdateForm
+from .models import Post, Profile
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # Create your views here.
 def register(request):
@@ -41,3 +44,104 @@ def home(request):
 
 def posts(request):
     return render(request, 'blog/posts.html')
+
+
+#CRUD views for blog posts
+
+# 1. ListView: List all blog posts (R - Read All)
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']  # Newest posts first
+
+# 2. DetailView: Show details of a single post (R - Read One)
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+    context_object_name = 'post'
+
+# 3. CreateView: Create a new post (only logged-in users) (C - Create)
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # set the post author automatically
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse('posts')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'Create'
+        return context
+
+# 4. UpdateView: Update an existing post (only the author can edit) (U - Update)
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # ensure the author remains the same
+        return super().form_valid(form)
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # only allow the author to edit
+    def get_success_url(self):
+        return reverse('posts')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'Update'
+        return context
+
+# 5. DeleteView: Delete a post (only the author can delete) (D - Delete)
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    # Redirect to the blog list after successful deletion
+    success_url = reverse_lazy('posts')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # only allow the author to delete
+
+# # --- R (List) and C (Create) View ---
+# class BookListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = BookSerializer
+    
+#     # 🔑 Permission Setup: 
+#     # - GET (List) is allowed for everyone.
+#     # - POST (Create) is restricted to authenticated users.
+#     permission_classes = [IsAuthenticatedOrReadOnly] 
+
+#     # 🔑 Custom Filter & Search, and Ordering Setup:
+#     filter_backends = [
+#         DjangoFilterBackend,
+#         filters.SearchFilter,
+#         filters.OrderingFilter,
+#         ]
+#     search_fields = ['^title', 'author__name']
+#     filterset_class = BookFilter # Reference the custom filter class
+#     ordering_fields = ['title', 'publication_year', 'author__name']
+#     ordering = ['title'] # Default ordering
+
+
+#     def perform_create(self, serializer):
+#         """
+#         Executes custom logic before saving a new Book instance.
+#         """
+#         print(f"LOG: Creating new book: {serializer.validated_data.get('title')}")
+#         serializer.save()
+
+# # --- R (Detail), U (Update), and D (Delete) View ---
+# class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = BookSerializer
+    
+#     # 🔑 Permission Setup: 
+#     # - GET (Detail) is allowed for everyone.
+#     # - PUT/PATCH (Update) and DELETE are restricted to authenticated users.
+#     permission_classes = [IsAuthenticatedOrReadOnly]
