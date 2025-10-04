@@ -156,6 +156,35 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         return reverse('post-detail', kwargs={'pk': self.object.post.pk})
     
+
+# 5. PostByTagListView: List posts filtered by a specific tag
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html' # Reuse the existing post list template
+    context_object_name = 'posts'
+    ordering = ['-published_date'] 
+
+    def get_queryset(self):
+        # 1. Get the tag_slug from the URL keywords (kwargs)
+        tag_slug = self.kwargs.get('tag_slug')
+        
+        if tag_slug:
+            # 2. Filter the Post queryset to include only posts with that tag
+            # The 'tags' field is a TaggableManager, and its filter method uses a slug.
+            return Post.objects.filter(tags__slug=tag_slug).distinct()
+        
+        # Fallback to all posts if no tag is provided (though the URL pattern prevents this)
+        return super().get_queryset()
+
+    def get_context_data(self, **kwargs):
+        # Add the tag slug to the context so the template can display it
+        context = super().get_context_data(**kwargs)
+        tag_slug = self.kwargs.get('tag_slug')
+        if tag_slug:
+            # Capitalize and replace hyphens for display purposes
+            context['current_tag'] = tag_slug.replace('-', ' ').title()
+        return context
+    
 #Search functionality
 class PostSearchView(ListView):
     model = Post
