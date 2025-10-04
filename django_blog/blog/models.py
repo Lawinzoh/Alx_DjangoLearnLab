@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.conf import settings
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class Post(models.Model):
@@ -11,9 +12,11 @@ class Post(models.Model):
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    tags = TaggableManager(blank=True)  # <--- use taggit manager
 
     def __str__(self):
         return self.title
+
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.pk})
     
@@ -46,3 +49,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username} on {self.post.title}"
+    
